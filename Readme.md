@@ -1,3 +1,8 @@
+# Description
+
+This is a simple Python script for downloading YouTube videos.
+
+# How to run
 1, create venv
 ```bash
 python3 -m venv venv
