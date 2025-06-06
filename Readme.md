@@ -27,3 +27,14 @@ python3 -m pip install -r requirements.txt
 ```bash
 python3 main.py
 ```
+# Development
+
+1, building requirements.txt
+```bash
+python3 -m pip freeze > requirements.txt
+```
+
+2, Generate app for mac
+```bash
+python3 setup.py py2app
+```
