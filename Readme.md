@@ -38,3 +38,13 @@ python3 -m pip freeze > requirements.txt
 ```bash
 python3 setup.py py2app
 ```
+
+
+
+```bash
+pyinstaller main.py \
+  --name=u2b \
+  --windowed \
+  --icon=icon.icns \
+  --add-data "$(python3 -c "from PyQt5.QtCore import QLibraryInfo; print(QLibraryInfo.location(QLibraryInfo.PluginsPath))"):platforms"
+```

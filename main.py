@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
     QLineEdit, QPushButton, QListWidget, QListWidgetItem, QLabel
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtGui import QIcon  # ✅ QIcon 来自 QtGui
 import yt_dlp
 import shutil
 
@@ -68,6 +69,8 @@ class DownloaderUI(QWidget):
         super().__init__()
         self.setWindowTitle("YouTube 视频下载器")
         self.setMinimumWidth(500)
+        icon_path = os.path.join(os.path.dirname(__file__), "icon.icns")
+        self.setWindowIcon(QIcon(icon_path))
 
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText("输入 YouTube 视频链接...")
