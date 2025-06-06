@@ -1,0 +1,24 @@
+1, create venv
+```bash
+python3 -m venv venv
+```
+
+2, activate venv
+```bash
+source venv/bin/activate
+```
+
+use fish shell
+```bash
+source venv/bin/activate.fish
+```
+
+3, install requirements
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+4, run
+```bash
+python3 main.py
+```

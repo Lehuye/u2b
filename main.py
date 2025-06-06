@@ -6,6 +6,14 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import yt_dlp
+import shutil
+
+
+# ✅ 新增：创建 temp 和 downloads 文件夹
+temp_dir = os.path.join(os.getcwd(), "temp")
+downloads_dir = os.path.join(os.getcwd(), "downloads")
+os.makedirs(temp_dir, exist_ok=True)
+os.makedirs(downloads_dir, exist_ok=True)
 
 
 class DownloadWorker(QThread):
@@ -16,10 +24,11 @@ class DownloadWorker(QThread):
         super().__init__()
         self.url = url
         self.output_dir = output_dir
+        self.temp_output_path = temp_dir  # ✅ 使用 temp 文件夹
 
     def run(self):
         ydl_opts = {
-            'outtmpl': f'{self.output_dir}/%(title)s.%(ext)s',
+            'outtmpl': f'{self.temp_output_path}/%(title)s.%(ext)s',  # ✅ 保存到 temp
             'format': 'bestvideo+bestaudio/best',
             'merge_output_format': 'mp4',
             'progress_hooks': [self.progress_hook],
@@ -37,9 +46,22 @@ class DownloadWorker(QThread):
             speed = d.get('_speed_str', '').strip()
             self.progress.emit(percent, speed)
         elif d['status'] == 'finished':
-            title = d.get('info_dict', {}).get('title', '完成')
-            self.finished.emit(title)
+            info = d.get('info_dict', {})
+            title = info.get('title', '完成')
+            ext = info.get('ext', 'mp4')
+            
+            # ✅ 解决路径匹配问题 —— 实际文件路径来自 d['filename']
+            src = d.get('filename')  # yt_dlp >= 2021 支持
+            dst = os.path.join(downloads_dir, os.path.basename(src))
 
+            try:
+                if os.path.exists(src):
+                    import shutil
+                    shutil.move(src, dst)
+            except Exception as e:
+                title = f"{title}（移动失败：{e}）"
+
+            self.finished.emit(title)
 
 class DownloaderUI(QWidget):
     def __init__(self):
